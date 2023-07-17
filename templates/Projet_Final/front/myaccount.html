@@ -1,0 +1,24 @@
+{% extends 'Projet_Final/base.html' %}
+
+{% block content %}
+    <section class="my-account-area ptb-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="my-account-info">
+                        <h2>My Account</h2>
+
+                        <ul>
+                            <li><strong>Username:</strong> {{ user.username }}</li>
+                            <li><strong>Email:</strong> {{ user.email }}</li>
+                            <li><strong>Image:</strong></p>
+                                <img src="{{ user.img_url }}" alt="User Image" class="w-25"></li>
+                        </ul>
+
+                        <a href="{% url 'update_account' %}" class="btn btn-primary">Update Account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

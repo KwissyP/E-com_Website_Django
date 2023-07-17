@@ -1,0 +1,21 @@
+{% extends 'Projet_Final/base.html' %}
+
+{% block content %}
+    <section class="my-account-area ptb-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="my-account-info">
+                        <h2>Update Account</h2>
+                        
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

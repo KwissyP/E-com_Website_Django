@@ -1,0 +1,53 @@
+{% load bootstrap5 %} 
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<div class="container p-5">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'backoffice' %}">Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'back_product' %}">Product</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'back_article' %}">Blog</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'back_contact' %}">Contact</a>
+          </li>
+        </ul>
+      </div>
+      <a class="navbar-brand" href="{% url 'home' %}">Back to Home</a>
+    </div>
+  </nav>
+
+  <h1>Liste des informations</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Info</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Boucle pour afficher chaque information -->
+      {% for contact in contacts %}
+      <tr>
+        <td>{{ contact.email }}</td>
+        <td class="d-flex gap-2">
+          <form action="/contact/destroy/{{ contact.id }}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+          </form>
+          <a href="/contact/edit/{{ contact.id }}"><button class="btn btn-outline-primary">Edit</button></a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
