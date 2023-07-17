@@ -45,7 +45,7 @@ def readProduct(request, id):
     # Tri des tailles dans l'ordre spécifié
     sizes = sorted(sizes, key=lambda x: ['S', 'M', 'L', 'XL', 'XXL'].index(x))
 
-    return render(request, 'Projet_Final/front/products-type-1.html', {"show": show, "notes": notes, "sizes": sizes, "selected_size": selected_size, "stock_quantity": stock_quantity})
+    return render(request, 'Projet_Final/front/products-type-1.html', {"show": show, "notes": notes, "sizes": sizes, "selected_size": selected_size, "stock_quantity": stock_quantity, 'wishlist_products': wishlist_products,})
 
 def comment_create(request, id):
     if request.user.is_authenticated:

@@ -29,28 +29,31 @@
     </div>
   </nav>
 
-  <h1>Liste des informations</h1>
+  <h1>Order Details</h1>
   <table class="table">
     <thead>
-      <tr>
-        <th>Info</th>
-        <th>Actions</th>
-      </tr>
+        <tr>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
     </thead>
     <tbody>
-      <!-- Boucle pour afficher chaque information -->
-      {% for contact in contacts %}
-      <tr>
-        <td>{{ contact.email }}</td>
-        <td class="d-flex gap-2">
-          <form action="/contact/destroy/{{ contact.id }}" method="POST">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-outline-danger">Delete</button>
-          </form>
-          <a href="/contact/edit/{{ contact.id }}"><button class="btn btn-outline-primary">Edit</button></a>
-        </td>
-      </tr>
-      {% endfor %}
+        {% for item in order.order_items.all %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.size }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.product.price }}</td>
+            <td>{{ item.get_total }}</td>
+        </tr>
+        {% endfor %}
     </tbody>
-  </table>
+    
+    
+</table>
+  <a href="{% url 'order_list' %}" class="btn btn-outline-primary">Back to Order List</a>
 </div>
+

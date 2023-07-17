@@ -41,14 +41,3 @@ class AnonymousUser(models.Model):
     name = models.CharField(max_length=50)
     email = models.EmailField()
 
-
-
-class Order(models.Model):
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
-    # entre progress / noValidate / validate
-    status = models.CharField(max_length=50)
-
-class Achat(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)

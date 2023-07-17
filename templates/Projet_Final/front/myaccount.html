@@ -18,6 +18,20 @@
                         <a href="{% url 'update_account' %}" class="btn btn-primary">Update Account</a>
                     </div>
                 </div>
+                <div class="col-lg-6">
+                    <div class="my-orders">
+                        <h2>My Orders</h2>
+                        {% for order in user_orders %}
+                            <div class="order">
+                                <p>Order ID: {{ order.pk }}</p>
+                                <p>Status: {{ order.status }}</p>
+                                <!-- Ajoutez d'autres détails de la commande si nécessaire -->
+                            </div>
+                        {% empty %}
+                            <p>No orders found.</p>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
     </section>

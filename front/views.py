@@ -1,10 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
+from cart.models import Order
 from user.models import User
 from product.models import Product, Category
 from blog.models import Article, CategoryArticle
 from contact.models import Contact
 from django.db.models import Count
 from django.core.paginator import Paginator
+from django.core.mail import send_mail
+from django.contrib import messages
 
 # Create your views here.
 
@@ -15,7 +18,7 @@ def home(request):
     products = Product.objects.order_by('-id')[:6]
     popular_products = Product.objects.annotate(comment_count=Count('note')).order_by('-comment_count')[:6]
     latest_articles = Article.objects.all().order_by('-id')[:3]
-    return render(request, 'Projet_Final/front/home.html', {'contacts' : contacts, 'products': products, 'popular_products': popular_products, 'latest_articles': latest_articles})
+    return render(request, 'Projet_Final/front/home.html', {'contacts' : contacts, 'products': products, 'popular_products': popular_products, 'latest_articles': latest_articles, 'wishlist_products': wishlist_products,})
 
 def product(request, category_id=None):
     products = Product.objects.all()
@@ -87,19 +90,13 @@ def blog(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'Projet_Final/front/blog-5.html', {'articles': page_obj, 'categories': categories, 'popular_articles': popular_articles})
-
+    return render(request, 'Projet_Final/front/blog-5.html', {'articles': page_obj, 'categories': categories, 'popular_articles': popular_articles, 'wishlist_products': wishlist_products,})
 
 def contact(request):
     contacts = Contact.objects.all()
     if request.user.is_authenticated:
         wishlist_products = request.user.produits_wishlist.all()
-    return render(request, 'Projet_Final/front/contact.html', {'contacts' : contacts})
-
-def checkout(request):
-    if request.user.is_authenticated:
-        wishlist_products = request.user.produits_wishlist.all()
-    return render(request, 'Projet_Final/front/checkout.html')
+    return render(request, 'Projet_Final/front/contact.html', {'contacts' : contacts, 'wishlist_products': wishlist_products,})
 
 def backoffice(request):
     users = User.objects.all()
@@ -116,3 +113,43 @@ def back_article(request):
 def back_contact(request):
     contacts = Contact.objects.all()
     return render(request, 'Projet_Final/back/back_contact.html', {'contacts' : contacts})
+
+def order_list(request):
+    orders = Order.objects.all()
+    context = {
+        'orders': orders
+    }
+    return render(request, 'Projet_Final/back/order_list.html', context)
+
+def order_details(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+
+    context = {
+        'order': order
+    }
+
+    return render(request, 'Projet_Final/back/order_details.html', context)
+
+def confirm_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    
+    # Vérifier si la commande a déjà été confirmée
+    if order.status == 'Confirmed':
+        messages.error(request, 'This order has already been confirmed.')
+        return redirect('order_list')
+    
+    # Confirmer la commande
+    order.status = 'Confirmed'
+    order.save()
+    
+    # Envoyer l'e-mail de confirmation à l'utilisateur
+    send_mail(
+        'Order Confirmation',
+        'Your order has been confirmed.',
+        'chrispandoulas@gmail.com',  # Remplacez par votre adresse e-mail
+        [order.user.email],
+        fail_silently=False,
+    )
+    
+    messages.success(request, 'Order has been confirmed. Confirmation email has been sent to the user.')
+    return redirect('order_list')

@@ -15,7 +15,7 @@ def updateContact(request,id):
             return redirect('back_Contact')
     else:
         form = ContactForm(instance=edit)
-    return render(request, 'Projet_Final/back/back_edit.html', {'form': form})
+    return render(request, 'Projet_Final/back/back_edit.html', {'form': form, 'wishlist_products': wishlist_products,})
 
 def destroy_Contact(request, id):
     destroy = Contact(id)

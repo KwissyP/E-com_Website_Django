@@ -29,25 +29,26 @@
     </div>
   </nav>
 
-  <h1>Liste des informations</h1>
+  <h1>Order List</h1>
   <table class="table">
     <thead>
       <tr>
-        <th>Info</th>
+        <th>Order ID</th>
+        <th>User</th>
+        <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <!-- Boucle pour afficher chaque information -->
-      {% for contact in contacts %}
+      <!-- Boucle pour afficher chaque commande -->
+      {% for order in orders %}
       <tr>
-        <td>{{ contact.email }}</td>
+        <td>{{ order.pk }}</td>
+        <td>{{ order.user.username }}</td>
+        <td>{{ order.status }}</td>
         <td class="d-flex gap-2">
-          <form action="/contact/destroy/{{ contact.id }}" method="POST">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-outline-danger">Delete</button>
-          </form>
-          <a href="/contact/edit/{{ contact.id }}"><button class="btn btn-outline-primary">Edit</button></a>
+          <a href="{% url 'confirm_order' order_id=order.id %}" class="btn btn-outline-success">Confirm</a>
+          <a href="{% url 'order_details' order_id=order.id %}" class="btn btn-outline-primary">Details</a>
         </td>
       </tr>
       {% endfor %}

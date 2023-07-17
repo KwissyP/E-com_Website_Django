@@ -15,6 +15,7 @@ def updateArticle(request,id):
             return redirect('back_Article')
     else:
         form = ArticleForm(instance=edit)
+        
     return render(request, 'Projet_Final/back/back_edit.html', {'form': form})
 
 def destroy_Article(request, id):
@@ -34,15 +35,19 @@ def createArticle(request):
 
 
 def readArticle(request, id):
+    if request.user.is_authenticated:
+        wishlist_products = request.user.produits_wishlist.all()
     notes = Note2.objects.filter(article_id=id)
     show = Article.objects.get(id=id)
     categories = CategoryArticle.objects.all()  # Récupérer toutes les catégories
     tags = Tag.objects.all()  # Récupérer tous les tags
-    return render(request, 'Projet_Final/front/single-blog-1.html', {"show": show, "notes": notes, "categories": categories, "tags": tags})
+    return render(request, 'Projet_Final/front/single-blog-1.html', {"show": show, "notes": notes, "categories": categories, "tags": tags, 'wishlist_products': wishlist_products,})
 
 
 
 def comment_create2(request, id):
+    if request.user.is_authenticated:
+        wishlist_products = request.user.produits_wishlist.all()
     if request.method == 'POST':
         article = Article.objects.get(id=id)
         titre = request.POST.get('review-title')

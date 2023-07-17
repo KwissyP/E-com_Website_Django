@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.hashers import make_password
+
+from cart.models import Order
 from .models import *
 from .forms import *
 from django.core.mail import send_mail
@@ -80,20 +82,22 @@ def destroy_User(request, id):
 def my_account(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    
-    user = request.user
-    form = UserForm(instance=user)
-    
+
+    user_orders = Order.objects.filter(user=request.user)
+    form = UserForm(instance=request.user)
+
     if request.method == 'POST':
-        form = UserForm(request.POST, instance=user)
+        form = UserForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-    
+
     context = {
-        'form': form
+        'form': form,
+        'user_orders': user_orders
     }
-    
+
     return render(request, 'Projet_Final/front/myaccount.html', context)
+
 
 def update_account(request):
     user = request.user

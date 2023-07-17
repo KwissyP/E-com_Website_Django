@@ -60,4 +60,8 @@ urlpatterns = [
     path('wishlist/<int:id>/', wishlist, name='add_to_wishlist'),
     path('myaccount/', my_account, name='my_account'),
     path('my-account/update/', update_account, name='update_account'),
+    path('order_confirmation/<int:order_id>/', order_confirmation, name='order_confirmation'),
+    path('orders/', order_list, name='order_list'),
+    path('confirm/<int:order_id>/', confirm_order, name='confirm_order'),
+    path('order_details/<int:order_id>/', order_details, name='order_details'),
 ]
