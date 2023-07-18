@@ -8,7 +8,6 @@ def runConnexion():
     roles = [
         {'value': Role.ADMIN},
         {'value': Role.WEB},
-        {'value': Role.STOCK},
         {'value': Role.MEMBER},
     ]
     
@@ -18,10 +17,9 @@ def runConnexion():
     print(seeder.execute())
 
     users = [
-        {'username': 'admin', 'email': 'admin@admin.com', 'password': make_password('1234'), 'role': Role.objects.get(value=Role.ADMIN), 'img_url' : 'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png'},
-        {'username': 'web', 'email': 'web@web.com', 'password': make_password('1234'), 'role': Role.objects.get(value=Role.WEB), 'img_url' : 'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png'},
-        {'username': 'stock', 'email': 'stock@stock.com', 'password': make_password('1234'), 'role': Role.objects.get(value=Role.STOCK), 'img_url' : 'https://toppng.com/uploads/preview/app-icon-set-login-icon-comments-avatar-icon-11553436380yill0nchdm.png'},
-        {'username': 'member', 'email': 'member@member.com', 'password': make_password('1234'), 'role': Role.objects.get(value=Role.MEMBER), 'img_url' : 'https://png.pngtree.com/png-vector/20220709/ourmid/pngtree-businessman-user-avatar-wearing-suit-with-red-tie-png-image_5809521.png'},
+        {'username': 'admin', 'email': 'admin@admin.com', 'password': make_password('1234'), 'role': Role.objects.get(value=Role.ADMIN), 'img_url' : 'https://sm.ign.com/ign_fr/cover/a/avatar-gen/avatar-generations_bssq.jpg'},
+        {'username': 'web', 'email': 'web@web.com', 'password': make_password('1234'), 'role': Role.objects.get(value=Role.WEB), 'img_url' : 'https://static.vecteezy.com/ti/vecteur-libre/p3/3731316-web-icon-vector-line-on-white-background-image-for-web-presentation-logo-icon-symbol-gratuit-vectoriel.jpg'},
+        {'username': 'member', 'email': 'member@member.com', 'password': make_password('1234'), 'role': Role.objects.get(value=Role.MEMBER), 'img_url' : 'https://accws.org/wp-content/uploads/2014/04/member-stamp.jpg'},
     ]
     
     for item in users:

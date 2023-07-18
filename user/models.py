@@ -6,13 +6,11 @@ from django.contrib.auth.models import AbstractUser
 class Role(models.Model):
     ADMIN = 'Admin'
     WEB = 'Web'
-    STOCK = 'Stock'
     MEMBER = 'Member'
 
     ROLE_CHOICES = [
         (ADMIN, 'Admin'),
         (WEB, 'Web'),
-        (STOCK, 'Stock'),
         (MEMBER, 'Member'),
     ]
 
