@@ -38,12 +38,20 @@ def product(request, category_id=None):
     
     # Filtrage par taille
     selected_size = request.GET.get('size')
+    if not selected_size:
+        selected_size = 'S'  # Par défaut, la taille sélectionnée est 'S'
+    
+    sizes = ['S', 'M', 'L', 'XL', 'XXL']  # Liste des tailles disponibles
+    
     if selected_size:
         products = products.filter(selected_size=selected_size)
     
     # Filtrage par taille pour la catégorie sélectionnée
     if selected_size and active_category:
         products = products.filter(category=active_category, stock__contains={selected_size: True})
+        
+    for product in products:
+        product.stock_quantity = product.get_stock_quantity(selected_size)
     
     paginator = Paginator(products, 12)  # Spécifiez le nombre de produits par page (ici, 12)
     page_number = request.GET.get('page')
@@ -54,9 +62,11 @@ def product(request, category_id=None):
         'categories': categories,
         'active_category': active_category,
         'selected_size': selected_size,
-        'sizes': ['S', 'M', 'L', 'XL', 'XXL'],  # Liste des tailles disponibles
+        'sizes': sizes,  # Ajout de la variable 'sizes' dans le contexte
         'wishlist_products': wishlist_products,
     })
+
+
 
 
 def blog(request):
