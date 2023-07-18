@@ -11,18 +11,20 @@ from django.contrib import messages
 
 # Create your views here.
 
-def home(request):
-    if request.user.is_authenticated:
-        wishlist_products = request.user.produits_wishlist.all()
+def home(request):    
     contacts = Contact.objects.all()
     products = Product.objects.order_by('-id')[:6]
     popular_products = Product.objects.annotate(comment_count=Count('note')).order_by('-comment_count')[:6]
     latest_articles = Article.objects.all().order_by('-id')[:3]
+    wishlist_products = None 
+    if request.user.is_authenticated:
+        wishlist_products = request.user.produits_wishlist.all()
     return render(request, 'Projet_Final/front/home.html', {'contacts' : contacts, 'products': products, 'popular_products': popular_products, 'latest_articles': latest_articles, 'wishlist_products': wishlist_products,})
 
 def product(request, category_id=None):
     products = Product.objects.all()
     active_category = None
+    wishlist_products = None 
     
     if request.user.is_authenticated:
         wishlist_products = request.user.produits_wishlist.all()
@@ -60,6 +62,7 @@ def product(request, category_id=None):
 def blog(request):
     category_id = request.GET.get('category_id')
     search_query = request.GET.get('q')
+    wishlist_products = None
 
     if category_id == "tous":
         articles = Article.objects.all()
@@ -94,6 +97,7 @@ def blog(request):
 
 def contact(request):
     contacts = Contact.objects.all()
+    wishlist_products = None
     if request.user.is_authenticated:
         wishlist_products = request.user.produits_wishlist.all()
     return render(request, 'Projet_Final/front/contact.html', {'contacts' : contacts, 'wishlist_products': wishlist_products,})

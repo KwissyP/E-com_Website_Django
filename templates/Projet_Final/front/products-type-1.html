@@ -120,8 +120,13 @@
                             </div>
 
                             <div class="wishlist-compare-btn">
-                                <a href="#" class="optional-btn"><i class='bx bx-heart'></i> Add to Wishlist</a>
+                                {% if show in wishlist_products %}
+                                    <a href="{% url 'add_to_wishlist' show.id %}" class="optional-btn"><i class='bx bx-heart'></i> Remove from Wishlist</a>
+                                {% else %}
+                                    <a href="{% url 'add_to_wishlist' show.id %}" class="optional-btn"><i class='bx bx-heart'></i> Add to Wishlist</a>
+                                {% endif %}
                             </div>
+                            
 
                             <div class="buy-checkbox-btn">
                                 <div class="item">

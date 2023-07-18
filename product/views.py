@@ -34,7 +34,8 @@ def createProduct(request):
 def readProduct(request, id):
     notes = Note.objects.all().filter(product=id)
     show = Product.objects.get(id=id)
-    sizes = show.stock.keys() if show.stock else []
+    sizes = [size for size in show.stock.keys() if show.get_stock_quantity(size) > 0]
+    wishlist_products = None
     
     if request.user.is_authenticated:
         wishlist_products = request.user.produits_wishlist.all()
@@ -44,13 +45,12 @@ def readProduct(request, id):
     
     # Tri des tailles dans l'ordre spécifié
     sizes = sorted(sizes, key=lambda x: ['S', 'M', 'L', 'XL', 'XXL'].index(x))
+    
+    return render(request, 'Projet_Final/front/products-type-1.html', {"show": show, "notes": notes, "sizes": sizes, "selected_size": selected_size, "stock_quantity": stock_quantity, 'wishlist_products': wishlist_products})
 
-    return render(request, 'Projet_Final/front/products-type-1.html', {"show": show, "notes": notes, "sizes": sizes, "selected_size": selected_size, "stock_quantity": stock_quantity, 'wishlist_products': wishlist_products,})
 
 def comment_create(request, id):
-    if request.user.is_authenticated:
-        wishlist_products = request.user.produits_wishlist.all()
-    
+
     if request.method == 'POST':
         product = Product.objects.get(id=id)
         titre = request.POST.get('review-title')

@@ -35,6 +35,7 @@ def createArticle(request):
 
 
 def readArticle(request, id):
+    wishlist_products = None
     if request.user.is_authenticated:
         wishlist_products = request.user.produits_wishlist.all()
     notes = Note2.objects.filter(article_id=id)
@@ -46,8 +47,6 @@ def readArticle(request, id):
 
 
 def comment_create2(request, id):
-    if request.user.is_authenticated:
-        wishlist_products = request.user.produits_wishlist.all()
     if request.method == 'POST':
         article = Article.objects.get(id=id)
         titre = request.POST.get('review-title')

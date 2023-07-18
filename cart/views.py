@@ -34,7 +34,7 @@ def view_cart(request):
         total = 0
         shipping = 0
         subtotal = 0
-        
+    wishlist_products = None
     if request.user.is_authenticated:
         wishlist_products = request.user.produits_wishlist.all()
     
@@ -48,7 +48,7 @@ def view_cart(request):
     
     return render(request, 'Projet_Final/front/cart.html', context)
 
-
+@login_required(login_url='login')
 def add_to_cart(request):
     product_id = request.GET.get('product_id')
     size = request.GET.get('size')
@@ -63,13 +63,15 @@ def add_to_cart(request):
     else:
         cart_item.quantity += quantity
         
-    if request.user.is_authenticated:
-        wishlist_products = request.user.produits_wishlist.all()
     
     # Vérifier si la quantité ne dépasse pas le stock disponible pour la taille sélectionnée
     stock_quantity = product.get_stock_quantity(size)  # Récupérer la quantité de stock pour la taille sélectionnée
     if cart_item.quantity > stock_quantity:
         cart_item.quantity = stock_quantity
+    
+    # Mettre à jour le stock du produit
+    product.stock[size] -= cart_item.quantity
+    product.save()
     
     cart_item.save()
     
@@ -80,18 +82,19 @@ def add_to_cart(request):
     
     return redirect('cart')
 
+
 def remove_from_cart(request, product_id, size):
     cart = Cart.objects.get(user=request.user)
     product = Product.objects.get(id=product_id)
     cart_item = CartItem.objects.get(cart=cart, product=product, size=size)
+    
+    # Restaurer la quantité du produit dans le stock
+    product.stock[size] += cart_item.quantity
+    product.save()
+    
     cart_item.delete()
+    
     return redirect(request.META['HTTP_REFERER'])
-
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.core.mail import send_mail
-from django.contrib.auth.decorators import login_required
-
 
 
 @login_required
@@ -99,6 +102,7 @@ def checkout(request):
     wishlist_products = request.user.produits_wishlist.all()
     cart = Cart.objects.get(user=request.user)
     cart_items = cart.cartitem_set.all()
+    wishlist_products = None
     
     subtotal = sum(item.product.price * item.quantity for item in cart_items)
     shipping_cost = 30.00
@@ -194,7 +198,5 @@ def update_cart(request):
         
         messages.success(request, "Cart updated successfully.")
     
-    if request.user.is_authenticated:
-        wishlist_products = request.user.produits_wishlist.all()
     
     return redirect('cart')
