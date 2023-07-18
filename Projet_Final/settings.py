@@ -105,7 +105,8 @@ EMAIL_HOST_USER = 'chrispandoulas@gmail.com'
 # Le password est a changé
 EMAIL_HOST_PASSWORD = 'clxkmnzhpvpmirrc'
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = '55975@etu.he2b.be'
+DEFAULT_FROM_EMAIL = 'chrispandoulas@gmail.com'
+ADMIN_EMAIL = 'chrispandoulas@gmail.com'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

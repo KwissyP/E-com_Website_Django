@@ -159,7 +159,9 @@
 
                                 <div class="option-item">
                                     <div class="cart-btn">
-                                        <a href= "#" data-bs-toggle="modal" data-bs-target="#shoppingCartModal"><i class='bx bx-shopping-bag'></i><span>3</span></a>
+                                        <a href= "#" data-bs-toggle="modal" data-bs-target="#shoppingCartModal"><i class='bx bx-shopping-bag'></i>
+                                            <span>{{ cart.cartitem_set.count }}</span>
+                                        </a>
                                     </div>
                                 </div>
                                 
@@ -247,12 +249,14 @@
                             <div class="footer-newsletter-box">
                                 <p>To get the latest news and latest updates from us.</p>
                                 
-                                <form class="newsletter-form" data-bs-toggle="validator">
+                                <form class="newsletter-form" method="POST" action="{% url 'newsletter' %}">
+                                    {% csrf_token %}
                                     <label>Your E-mail Address:</label>
-                                    <input type="email" class="input-newsletter" placeholder="Enter your email" name="EMAIL" required autocomplete="off">
+                                    <input type="email" class="input-newsletter" placeholder="Enter your email" name="email" required autocomplete="off">
                                     <button type="submit">Subscribe</button>
                                     <div id="validator-newsletter" class="form-result"></div>
                                 </form>
+                                
                             </div>
                         </div>
                     </div>
@@ -298,8 +302,6 @@
         <script src={% static "assets/js/slick.min.js" %}></script>
         <script src={% static "assets/js/sticky-sidebar.min.js" %}></script>
         <script src={% static "assets/js/wow.min.js" %}></script>
-        <script src={% static "assets/js/form-validator.min.js" %}></script>
-        <script src={% static "assets/js/contact-form-script.js" %}></script>
         <script src={% static "assets/js/ajaxchimp.min.js" %}></script>
         <script src={% static "assets/js/main.js" %}></script>
     </body>

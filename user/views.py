@@ -26,7 +26,7 @@ def inscription(request):
         # Info du mail
         subject = 'Bienvenue sur notre site'
         message = 'Merci de vous être inscrit à notre site.'
-        from_email = '55975@etu.he2b.be'
+        from_email = 'chrispandoulas@gmail.com'
         to_email = user.email
         
         # Envoi du mail

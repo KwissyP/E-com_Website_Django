@@ -8,6 +8,7 @@ from django.db.models import Count
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.contrib import messages
+from django.template.loader import render_to_string
 
 # Create your views here.
 
@@ -110,6 +111,20 @@ def contact(request):
     wishlist_products = None
     if request.user.is_authenticated:
         wishlist_products = request.user.produits_wishlist.all()
+        
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+
+        # Envoie de l'email de confirmation
+        subject = 'Confirmation de réception de votre message'
+
+        context = {'name': name}
+        message = render_to_string('Projet_Final/front/confirmation_email.html', context)
+
+        send_mail(subject, '', 'chrispandoulas@gmail.com', [email], html_message=message)
+    
     return render(request, 'Projet_Final/front/contact.html', {'contacts' : contacts, 'wishlist_products': wishlist_products,})
 
 def backoffice(request):

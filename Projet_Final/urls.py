@@ -64,4 +64,5 @@ urlpatterns = [
     path('orders/', order_list, name='order_list'),
     path('confirm/<int:order_id>/', confirm_order, name='confirm_order'),
     path('order_details/<int:order_id>/', order_details, name='order_details'),
+    path('newsletter/', newsletter, name='newsletter'),
 ]

@@ -443,7 +443,7 @@
             submitMSGSub(false, "Please enter your email correctly.");
         } else {
             // everything looks good!
-            event.preventDefault();
+            // event.preventDefault();
         }
     });
     function callbackFunction (resp) {
