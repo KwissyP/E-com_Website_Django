@@ -1,12 +1,10 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.hashers import make_password
-
 from cart.models import Order
 from .models import *
 from .forms import *
 from django.core.mail import send_mail
-from django.template.loader import render_to_string
 from django.contrib.auth.forms import PasswordChangeForm
 
 # Create your views here.
@@ -50,18 +48,6 @@ def connexion(request):
 def deco(request):
     logout(request)
     return redirect('home')
-
-# def passwordchange(request):
-#     if request.method == 'POST':
-#         form = PasswordChangeForm(request.user, request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             update_session_auth_hash(request, user)
-#             send_mail('maj password', 'Ton mdp à été modifier', 'marouaneindustries@mail.com', [user.email])
-#             return redirect('home')
-#     else:
-#         form = PasswordChangeForm(request.user)
-#     return render(request, 'lerecap/coco/passwordchange.html', {'form': form})
 
 def updateUser(request,id):
     edit = User.objects.get(id=id)

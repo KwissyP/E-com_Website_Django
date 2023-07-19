@@ -12,7 +12,7 @@ def updateArticle(request,id):
         form = ArticleForm(request.POST, instance=edit)
         if form.is_valid():
             form.save()
-            return redirect('back_Article')
+            return redirect('back_article')
     else:
         form = ArticleForm(instance=edit)
         
@@ -21,14 +21,14 @@ def updateArticle(request,id):
 def destroy_Article(request, id):
     destroy = Article(id)
     destroy.delete()
-    return redirect('back_Article')
+    return redirect('back_article')
 
 def createArticle(request):
     if request.method == 'POST':
         form = ArticleForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('back_Article')
+            return redirect('back_article')
     else:
         form = ArticleForm()
     return render(request, 'Projet_Final/back/back_edit.html', {"form": form})
