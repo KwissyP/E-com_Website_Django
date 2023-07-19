@@ -24,6 +24,7 @@ from contact.views import *
 from cart.views import *
 from wishlist.views import *
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
@@ -65,4 +66,8 @@ urlpatterns = [
     path('confirm/<int:order_id>/', confirm_order, name='confirm_order'),
     path('order_details/<int:order_id>/', order_details, name='order_details'),
     path('newsletter/', newsletter, name='newsletter'),
+    path('password_reset/', CustomPasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('password_reset_confirm/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]

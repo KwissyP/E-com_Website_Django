@@ -5,7 +5,7 @@ from cart.models import Order
 from .models import *
 from .forms import *
 from django.core.mail import send_mail
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 
 # Create your views here.
 
@@ -98,3 +98,15 @@ def update_account(request):
         form = UserForm(instance=user)
     
     return render(request, 'Projet_Final/front/update_account.html', {'form': form})
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'Projet_Final/front/password_reset.html'
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'Projet_Final/front/password_reset_done.html'
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'Projet_Final/front/password_reset_confirm.html'
+    
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'Projet_Final/front/password_reset_complete.html'

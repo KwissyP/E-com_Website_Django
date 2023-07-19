@@ -435,17 +435,6 @@
         }
     });
 
-    // Subscribe form
-    $(".newsletter-form").validator().on("submit", function (event) {
-        if (event.isDefaultPrevented()) {
-        // handle the invalid form...
-            formErrorSub();
-            submitMSGSub(false, "Please enter your email correctly.");
-        } else {
-            // everything looks good!
-            // event.preventDefault();
-        }
-    });
     function callbackFunction (resp) {
         if (resp.result === "success") {
             formSuccessSub();

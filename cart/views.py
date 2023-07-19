@@ -10,34 +10,33 @@ def view_cart(request):
     try:
         cart = Cart.objects.get(user=request.user)
         cart_items = cart.cartitem_set.all()
-        
-        # Calculer le sous-total de chaque élément du panier
+
+        # Calculer le sous-total de chaque élément du panier et récupérer les quantités de stock
         for cart_item in cart_items:
             cart_item.update_subtotal()
-            
-            # Calculer la quantité de stock pour le cart_item
             size = cart_item.size
             quantity = cart_item.product.get_stock_quantity(size)
             cart_item.stock_quantity = quantity
-        
+
         # Calculer les frais de livraison
         shipping = 30.00
-        
+
         # Calculer le sous-total
         subtotal = sum(cart_item.subtotal for cart_item in cart_items)
-        
+
         # Calculer le total du panier    
         total = subtotal + shipping
-        
+
     except Cart.DoesNotExist:
         cart_items = None
         total = 0
         shipping = 0
         subtotal = 0
+
     wishlist_products = None
     if request.user.is_authenticated:
         wishlist_products = request.user.produits_wishlist.all()
-    
+
     context = {
         'cart_items': cart_items,
         'total': total,
@@ -45,42 +44,40 @@ def view_cart(request):
         'subtotal': subtotal,
         'wishlist_products': wishlist_products,
     }
-    
+
     return render(request, 'Projet_Final/front/cart.html', context)
+
 
 @login_required(login_url='login')
 def add_to_cart(request):
     product_id = request.GET.get('product_id')
     size = request.GET.get('size')
     quantity = int(request.GET.get('quantity', 1))
-    
+
     product = get_object_or_404(Product, pk=product_id)
     cart, created = Cart.objects.get_or_create(user=request.user)
     cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product, size=size)
-    
+
     if item_created:
         cart_item.quantity = quantity
     else:
         cart_item.quantity += quantity
-        
-    
+
     # Vérifier si la quantité ne dépasse pas le stock disponible pour la taille sélectionnée
     stock_quantity = product.get_stock_quantity(size)  # Récupérer la quantité de stock pour la taille sélectionnée
     if cart_item.quantity > stock_quantity:
         cart_item.quantity = stock_quantity
-    
-    # Mettre à jour le stock du produit
-    product.stock[size] -= cart_item.quantity
-    product.save()
-    
+
     cart_item.save()
-    
+
     # Mettre à jour le sous-total du CartItem
     cart_item.update_subtotal()
-    
+
     messages.success(request, f"{product.name} added to cart.")
-    
+
     return redirect('cart')
+
+
 
 
 def remove_from_cart(request, product_id, size):
@@ -102,14 +99,24 @@ def checkout(request):
     wishlist_products = request.user.produits_wishlist.all()
     cart = Cart.objects.get(user=request.user)
     cart_items = cart.cartitem_set.all()
-    wishlist_products = None
-    
     subtotal = sum(item.product.price * item.quantity for item in cart_items)
     shipping_cost = 30.00
     total = subtotal + shipping_cost
-    
+
+    # Vérifier si le stock est suffisant pour chaque produit dans le panier avant de créer la commande
+    stock_is_sufficient = True
+    for cart_item in cart_items:
+        stock_quantity = cart_item.product.get_stock_quantity(cart_item.size)
+        if cart_item.quantity > stock_quantity:
+            stock_is_sufficient = False
+            messages.warning(request, f"Insufficient stock for {cart_item.product.name}. Maximum available quantity: {stock_quantity}")
+            break
+
+    if not stock_is_sufficient:
+        return redirect('cart')
+
     order = None
-    
+
     if request.method == 'POST':
         with transaction.atomic():
             # Créer une nouvelle instance de Order
@@ -118,7 +125,7 @@ def checkout(request):
                 cart=cart,
                 total_amount=total,
             )
-            
+
             # Créer les instances de OrderItem pour chaque produit du panier
             for item in cart_items:
                 OrderItem.objects.create(
@@ -127,10 +134,14 @@ def checkout(request):
                     size=item.size,
                     quantity=item.quantity,
                 )
-            
+
+                # Retirer le stock du produit
+                item.product.stock[item.size] -= item.quantity
+                item.product.save()
+
             # Vider le panier
             cart.cartitem_set.all().delete()
-            
+
             # Envoyer l'e-mail de confirmation à l'utilisateur
             send_mail(
                 'Order Confirmation',
@@ -139,11 +150,11 @@ def checkout(request):
                 [request.POST['email']],
                 fail_silently=False,
             )
-            
+
             messages.success(request, 'Your order has been placed. A confirmation email has been sent.')
-            
+
             return redirect('order_confirmation', order_id=order.pk)
-    
+
     context = {
         'cart_items': cart_items,
         'subtotal': subtotal,
@@ -152,7 +163,7 @@ def checkout(request):
         'wishlist_products': wishlist_products,
         'order': order,
     }
-    
+
     return render(request, 'Projet_Final/front/checkout.html', context)
 
 
