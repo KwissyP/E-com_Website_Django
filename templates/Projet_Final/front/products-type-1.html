@@ -218,11 +218,9 @@
                                     </div>
                                     <h3>{{ note.titre }}</h3>
                                     {% if note.author %}
-                                    <span><strong>{{ note.author.username }}</strong> on <strong>Sep 21,
-                                            2021</strong></span>
+                                    <span><strong>{{ note.author.username }}</strong> on <strong>{{ note.created_at|date:"F d, Y" }} at {{ note.created_at|time:"h:i a" }}</strong></span>
                                     {% else %}
-                                    <span><strong>{{ note.anonymous_author.name }}</strong> on <strong>Sep 21,
-                                            2021</strong></span>
+                                    <span><strong>{{ note.anonymous_author.name }}</strong> on <strong>{{ note.created_at|date:"F d, Y" }} at {{ note.created_at|time:"h:i a" }}/strong></span>
                                     {% endif %}
                                     <p>{{ note.text }}</p>
                                 </div>

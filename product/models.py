@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import JSONField
@@ -35,6 +36,7 @@ class Note(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     titre = models.CharField(max_length=50)
     text = models.TextField(max_length=300, default='valeur_par_défaut')
+    created_at = models.DateTimeField(default=timezone.now)
 
 
 class AnonymousUser(models.Model):
