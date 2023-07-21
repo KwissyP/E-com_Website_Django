@@ -48,8 +48,8 @@ def product(request, category_id=None):
         products = products.filter(selected_size=selected_size)
     
     # Filtrage par taille pour la catégorie sélectionnée
-    if selected_size and active_category:
-        products = products.filter(category=active_category, stock__contains={selected_size: True})
+    # if selected_size and active_category:
+    #     products = products.filter(category=active_category, stock__contains={selected_size: True})
         
     for product in products:
         product.stock_quantity = product.get_stock_quantity(selected_size)
